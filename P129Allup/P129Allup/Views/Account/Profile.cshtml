@@ -1,0 +1,120 @@
+﻿@model MemberVM
+@{
+    ViewData["Title"] = "Profile";
+    int no = 0;
+}
+
+<!--====== Breadcrumb Part Start ======-->
+
+<div class="breadcrumb-area">
+    <div class="container-fluid custom-container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                <li class="breadcrumb-item active">My Account</li>
+            </ol>
+        </nav>
+    </div> <!-- container -->
+</div>
+
+<!--====== Breadcrumb Part Ends ======-->
+<!--====== My Account Part Start ======-->
+
+<section class="my-account-area pt-10">
+    <div class="container-fluid custom-container">
+        <div class="row">
+            <div class="col-xl-3 col-md-4">
+                <div class="my-account-menu mt-30">
+                    <ul class="nav account-menu-list flex-column nav-pills" id="pills-tab" role="tablist">
+                        <li>
+                            <a class="active" id="pills-account-tab" data-toggle="pill" href="#pills-account" role="tab" aria-controls="pills-account" aria-selected="false"><i class="far fa-user"></i> Account Details</a>
+                        </li>
+                        <li>
+                            <a id="pills-order-tab" data-toggle="pill" href="#pills-order" role="tab" aria-controls="pills-order" aria-selected="false"><i class="far fa-shopping-cart"></i> Order</a>
+                        </li>
+                        <li>
+                            <a asp-controller="account" asp-action="logout"><i class="far fa-sign-out-alt"></i> Logout</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-xl-8 col-md-8">
+                <div class="tab-content my-account-tab mt-30" id="pills-tabContent">
+                    <div class="tab-pane fade  show active" id="pills-account" role="tabpanel" aria-labelledby="pills-account-tab">
+                        <div class="my-account-details account-wrapper">
+                            <h4 class="account-title">Account Details</h4>
+                            <div class="account-details">
+                                @await Html.PartialAsync("_AccountProfilePartialForm",Model.ProfileVM)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="pills-order" role="tabpanel" aria-labelledby="pills-order-tab">
+                        <div class="my-account-order account-wrapper">
+                            <h4 class="account-title">Orders</h4>
+                            <div class="account-table text-center mt-30 table-responsive">
+                                <table class="table table-condensed" style="border-collapse:collapse;">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Name</th>
+                                            <th>Date</th>
+                                            <th>Status</th>
+                                            <th>Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (Order order in Model.Orders)
+                                        {
+                                            no++;
+                                            int itemNo = 0;
+                                            <tr data-toggle="collapse" data-target="#demo@(order.Id)" class="accordion-toggle">
+                                                <td>@no</td>
+                                                <td>@order.Name @order.SurName</td>
+                                                <td>@order.CreatedAt?.ToString("dd-MM-yyyy")</td>
+                                                <td @*class="text-success"*@>@order.OrderStatus</td>
+                                                <td @*class="text-error"*@>@order.TotalPrice</td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="6" class="hiddenRow">
+                                                    <div class="accordian-body collapse" id="demo@(order.Id)">
+                                                        <table class="table table-condensed" style="border-collapse:collapse;">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>#</th>
+                                                                    <th>Product Name</th>
+                                                                    <th>Product Price</th>
+                                                                    <th>Product Count</th>
+                                                                    <th>Product totalPrice</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @foreach (OrderItem orderItem in order.OrderItems)
+                                                                {
+                                                                    itemNo++;
+                                                                    <tr>
+                                                                        <td>@itemNo</td>
+                                                                        <td>@orderItem.Product.Name</td>
+                                                                        <td>@orderItem.Price</td>
+                                                                        <td>@orderItem.Count</td>
+                                                                        <td>@orderItem.TotalPrice</td>
+                                                                    </tr>
+                                                                }
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!--====== My Account Part Ends ======-->
